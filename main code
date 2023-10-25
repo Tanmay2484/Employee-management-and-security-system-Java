@@ -1,0 +1,440 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+class Employee {
+    private int id;
+    private String name, gender, position;
+    private double salary;
+    private String password;
+
+    public Employee() {
+        id = 0;
+        name = "Unknown";
+        gender = "Unknown";
+        position = "Unknown";
+        salary = 0;
+        password = "";
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public double getSalary() {
+        return salary;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public void setSalary(double salary) {
+        this.salary = salary;
+    }
+
+    public void setPassword(String pass) {
+        password = pass;
+    }
+
+    public void input() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter your Employee Id: ");
+        id = scanner.nextInt();
+        scanner.nextLine();
+        System.out.print("Enter your Employee Name: ");
+        name = scanner.nextLine();
+        System.out.print("Enter your gender: ");
+        gender = scanner.next();
+        System.out.print("Enter your position: ");
+        position = scanner.next();
+
+        System.out.print("Set a password (at least 5 characters, starting with a capital letter, containing at least one special character): ");
+        String pass = scanner.next();
+        while (!isValidPassword(pass)) {
+            System.out.print("Invalid password! Please try again: ");
+            pass = scanner.next();
+        }
+        setPassword(pass);
+
+        System.out.print("Enter your salary: ");
+        salary = scanner.nextDouble();
+    }
+
+    public boolean isValidPassword(String pass) {
+        if (pass.length() < 5) {
+            return false;
+        }
+
+        if (!Character.isUpperCase(pass.charAt(0))) {
+            return false;
+        }
+
+        boolean hasSpecialChar = false;
+        for (char c : pass.toCharArray()) {
+            if (!Character.isLetterOrDigit(c)) {
+                hasSpecialChar = true;
+                break;
+            }
+        }
+
+        return hasSpecialChar;
+    }
+
+    public void output() {
+        System.out.printf("%-10d%-15s%-10s%-15s%-10.2f%n", id, name, gender, position, salary);
+    }
+
+    public static void printHeader() {
+        System.out.printf("%-10s%-15s%-10s%-15s%-10s%n", "ID", "NAME", "GENDER", "POSITION", "SALARY");
+    }
+
+    public static void getList(ArrayList<Employee> employees) {
+        printHeader();
+        for (Employee emp : employees) {
+            emp.output();
+        }
+    }
+
+    public static void searchById(ArrayList<Employee> employees) {
+        Scanner scanner = new Scanner(System.in);
+        int idSearch, isFound;
+        System.out.print("Input employee id to search: ");
+        idSearch = scanner.nextInt();
+        isFound = 0;
+        printHeader();
+        for (Employee emp : employees) {
+            if (idSearch == emp.getId()) {
+                emp.output();
+                isFound = 1;
+                break;
+            }
+        }
+        if (isFound == 0) {
+            System.out.println("Message ----> Id " + idSearch + " Not found");
+        }
+    }
+
+    public static void searchByName(ArrayList<Employee> employees) {
+        Scanner scanner = new Scanner(System.in);
+        int isFound;
+        String textSearch;
+        System.out.print("Input employee name to search: ");
+        scanner.nextLine();
+        textSearch = scanner.nextLine();
+        isFound = 0;
+        printHeader();
+        for (Employee emp : employees) {
+            if (textSearch.equals(emp.getName())) {
+                emp.output();
+                isFound = 1;
+                break;
+            }
+        }
+        if (isFound == 0) {
+            System.out.println("Message ----> Name " + textSearch + " Not found");
+        }
+    }
+
+    public static void searchByPosition(ArrayList<Employee> employees) {
+        Scanner scanner = new Scanner(System.in);
+        int isFound;
+        String positionSearch;
+        System.out.print("Input employee position to search: ");
+        positionSearch = scanner.next();
+        isFound = 0;
+        printHeader();
+        for (Employee emp : employees) {
+            if (positionSearch.equals(emp.getPosition())) {
+                emp.output();
+                isFound = 1;
+                break;
+            }
+        }
+        if (isFound == 0) {
+            System.out.println("Message ----> Position " + positionSearch + " Not found");
+        }
+    }
+
+    public static void sortNameASC(ArrayList<Employee> employees) {
+        employees.sort((a, b) -> a.getName().compareTo(b.getName()));
+        System.out.println("======= Sort name ASC ====== ");
+        getList(employees);
+    }
+
+    public static void sortNameDESC(ArrayList<Employee> employees) {
+        employees.sort((a, b) -> b.getName().compareTo(a.getName()));
+        System.out.println("======= Sort name DESC ====== ");
+        getList(employees);
+    }
+
+    public static void sortSalaryASC(ArrayList<Employee> employees) {
+        employees.sort((a, b) -> Double.compare(a.getSalary(), b.getSalary()));
+        System.out.println("======= Sort Salary ASC ====== ");
+        getList(employees);
+    }
+
+    public static void sortSalaryDESC(ArrayList<Employee> employees) {
+        employees.sort((a, b) -> Double.compare(b.getSalary(), a.getSalary()));
+        System.out.println("======= Sort Salary DESC ====== ");
+        getList(employees);
+    }
+
+    public static void deleteByID(ArrayList<Employee> employees) {
+        Scanner scanner = new Scanner(System.in);
+        int idSearch, isFound;
+        System.out.print("Input employee ID to delete: ");
+        idSearch = scanner.nextInt();
+        isFound = 0;
+        for (int i = 0; i < employees.size(); i++) {
+            if (idSearch == employees.get(i).getId()) {
+                employees.remove(i);
+                isFound = 1;
+                break;
+            }
+        }
+        if (isFound == 0) {
+            System.out.println("Message ----> ID " + idSearch + " Not found");
+        }
+    }
+
+    public static void updateById(ArrayList<Employee> employees) {
+        Scanner scanner = new Scanner(System.in);
+        int idSearch, isFound, optionUpdate;
+        System.out.print("Input Employee ID to update: ");
+        idSearch = scanner.nextInt();
+        isFound = 0;
+        for (int i = 0; i < employees.size(); i++) {
+            if (idSearch == employees.get(i).getId()) {
+                printHeader();
+                employees.get(i).output();
+                System.out.println("What do you want to update? ");
+                System.out.println("1. Update name");
+                System.out.println("2. Update gender");
+                System.out.println("3. Update position");
+                System.out.println("4. Update salary");
+                System.out.println("5. Update all");
+                System.out.print("Enter your option (1-5): ");
+                optionUpdate = scanner.nextInt();
+                switch (optionUpdate) {
+                    case 1:
+                        System.out.print("Input new Name: ");
+                        scanner.nextLine();
+                        employees.get(i).name = scanner.nextLine();
+                        employees.get(i).setName(employees.get(i).name);
+                        break;
+                    case 2:
+                        System.out.print("Input new Gender: ");
+                        employees.get(i).gender = scanner.next();
+                        employees.get(i).setGender(employees.get(i).gender);
+                        break;
+                    case 3:
+                        System.out.print("Input new Position: ");
+                        employees.get(i).position = scanner.next();
+                        employees.get(i).setPosition(employees.get(i).position);
+                        break;
+                    case 4:
+                        System.out.print("Input new Salary: ");
+                        employees.get(i).salary = scanner.nextDouble();
+                        employees.get(i).setSalary(employees.get(i).salary);
+                        break;
+                    case 5:
+                        System.out.print("Input new Name: ");
+                        scanner.nextLine();
+                        employees.get(i).name = scanner.nextLine();
+                        employees.get(i).setName(employees.get(i).name);
+                        System.out.print("Input new Gender: ");
+                        employees.get(i).gender = scanner.next();
+                        employees.get(i).setGender(employees.get(i).gender);
+                        System.out.print("Input new Position: ");
+                        employees.get(i).position = scanner.next();
+                        employees.get(i).setPosition(employees.get(i).position);
+                        System.out.print("Input new Salary: ");
+                        employees.get(i).salary = scanner.nextDouble();
+                        employees.get(i).setSalary(employees.get(i).salary);
+                        break;
+                }
+                isFound = 1;
+                break;
+            }
+        }
+        if (isFound == 0) {
+            System.out.println("Message ----> ID " + idSearch + " Not found");
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        ArrayList<Employee> employees = new ArrayList<>();
+        int option, optionLevel1;
+        boolean isLoggedIn = false;
+        int loggedInId = -1;
+
+        do {
+            Scanner scanner = new Scanner(System.in);
+            if (!isLoggedIn) {
+                System.out.println("\n1. Signup");
+                System.out.println("2. Login");
+                System.out.println("3. Exit Program");
+                System.out.print("Input choice (1-3): ");
+                option = scanner.nextInt();
+                switch (option) {
+                    case 1: {
+                        Employee emp = new Employee();
+                        emp.input();
+                        employees.add(emp);
+                        System.out.println("Signup successful! Please remember your Employee Id and password for login.");
+                        break;
+                    }
+                    case 2: {
+                        int loginId;
+                        String loginPassword;
+                        System.out.print("Enter your Employee Id: ");
+                        loginId = scanner.nextInt();
+                        Employee loggedInEmployee = null;
+                        for (Employee emp : employees) {
+                            if (loginId == emp.getId()) {
+                                loggedInEmployee = emp;
+                                break;
+                            }
+                        }
+
+                        if (loggedInEmployee != null) {
+                            System.out.print("Enter your password: ");
+                            loginPassword = scanner.next();
+                            if (loginPassword.equals(loggedInEmployee.getPassword())) {
+                                System.out.println("Login successful! Welcome, " + loggedInEmployee.getName() + "!");
+                                isLoggedIn = true;
+                                loggedInId = loginId;
+                            } else {
+                                System.out.println("Login failed! Incorrect password.");
+                            }
+                        } else {
+                            System.out.println("Login failed! Employee Id not found.");
+                        }
+                        break;
+                    }
+                    case 3:
+                        System.exit(0);
+                        break;
+                    default:
+                        System.out.println("Invalid option. Please enter a valid option.");
+                }
+            } else {
+                System.out.println("\n1. Input Employee");
+                System.out.println("2. List all Employees");
+                System.out.println("3. Search Employee");
+                System.out.println("4. Sort Employees");
+                System.out.println("5. Delete Employee");
+                System.out.println("6. Update Employee");
+                System.out.println("7. Logout");
+                System.out.println("8. Exit Program");
+                System.out.print("Input choice (1-8): ");
+                option = scanner.nextInt();
+                switch (option) {
+                    case 1: {
+                        Employee emp = new Employee();
+                        emp.input();
+                        employees.add(emp);
+                        break;
+                    }
+                    case 2:
+                        Employee.getList(employees);
+                        break;
+                    case 3:
+                        do {
+                            System.out.println("Search Employee");
+                            System.out.println("1. Search by Id");
+                            System.out.println("2. Search by Name");
+                            System.out.println("3. Search by Position");
+                            System.out.println("4. Back");
+                            System.out.print("Input choice (1-4): ");
+                            optionLevel1 = scanner.nextInt();
+                            switch (optionLevel1) {
+                                case 1:
+                                    Employee.searchById(employees);
+                                    break;
+                                case 2:
+                                    Employee.searchByName(employees);
+                                    break;
+                                case 3:
+                                    Employee.searchByPosition(employees);
+                                    break;
+                            }
+                        } while (optionLevel1 != 4);
+                        break;
+                    case 4:
+                        do {
+                            System.out.println("Sort Employees");
+                            System.out.println("1. Sort by Name ASC");
+                            System.out.println("2. Sort by Name DESC");
+                            System.out.println("3. Sort by Salary ASC");
+                            System.out.println("4. Sort by Salary DESC");
+                            System.out.println("5. Back");
+                            System.out.print("Input choice (1-5): ");
+                            optionLevel1 = scanner.nextInt();
+                            switch (optionLevel1) {
+                                case 1:
+                                    Employee.sortNameASC(employees);
+                                    break;
+                                case 2:
+                                    Employee.sortNameDESC(employees);
+                                    break;
+                                case 3:
+                                    Employee.sortSalaryASC(employees);
+                                    break;
+                                case 4:
+                                    Employee.sortSalaryDESC(employees);
+                                    break;
+                            }
+                        } while (optionLevel1 != 5);
+                        break;
+                    case 5:
+                        Employee.deleteByID(employees);
+                        break;
+                    case 6:
+                        Employee.updateById(employees);
+                        break;
+                    case 7:
+                        isLoggedIn = false;
+                        loggedInId = -1;
+                        System.out.println("Logout successful!");
+                        break;
+                    case 8:
+                        System.exit(0);
+                        break;
+                    default:
+                        System.out.println("Invalid option. Please enter a valid option.");
+                }
+            }
+        } while (option != 8);
+    }
+}
